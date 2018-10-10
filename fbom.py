@@ -4,28 +4,48 @@
 import sys
 import random
 
-comp={}
+cpnt={}
+skip=[1,1,1,1,1,1,1,1,1,1,2,2,2,3,3,4,1,1,1,1,1,1,1,1,1,1]
 
 def main():
-    f = open(sys.argv[1])
+    if len(sys.argv)>1 :
+        infile = sys.argv[1]
+    else :
+        infile = "demo.csv"
+
+    try:
+        f = open(infile)
+    except:
+        print "Open file '%s' error !!"%infile
+        exit()
+
+    try:
+        outfile = open(sys.argv[2],"w+")
+    except:
+        outfile=open("out.csv","w+")
 
     print "symbol,number,place"
+    outfile.write("symbol,number,place\n")
 
     for line in f.readlines():
         m,n=line.split(",")
         n=eval(n)
 
-        k = comp[m] if comp.has_key(m) else 1
+        k = cpnt[m] if cpnt.has_key(m) else 1
 
         print "%s,%d,"%(m,n),
+        outfile.write("%s,%d,"%(m,n))
 
         for i in range(n):
-            k += random.randint(1,3)
+            k += skip[random.randint(0,len(skip)-1)]
             sys.stdout.write("%s%d "%(m,k))
+            outfile.write("%s%d "%(m,k))
         print
-        comp.update({m: k})
-    print comp
+        outfile.write("\n")
+        cpnt.update({m: k})
+    print cpnt
     f.close()
+    outfile.close()
 
 if __name__ == '__main__':
     main()
